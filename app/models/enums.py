@@ -1,0 +1,69 @@
+import enum
+
+class UserRole(str, enum.Enum):
+    CITIZEN = "CITIZEN"
+    RESEARCHER = "RESEARCHER"
+    RESPONSE_TEAM = "RESPONSE_TEAM"
+    GOVERNMENT_OFFICIAL = "GOVERNMENT_OFFICIAL"
+    ADMIN = "ADMIN"
+
+class SensorType(str, enum.Enum):
+    RAINFALL = "RAINFALL"
+    RIVER_LEVEL = "RIVER_LEVEL"
+    SOIL_MOISTURE = "SOIL_MOISTURE"
+    WEATHER = "WEATHER"
+    MULTI_SENSOR = "MULTI_SENSOR"
+
+class SensorStatus(str, enum.Enum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    MAINTENANCE = "MAINTENANCE"
+    OFFLINE = "OFFLINE"
+
+class RiskLevel(str, enum.Enum):
+    LOW = "LOW"
+    MODERATE = "MODERATE"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
+class AlertType(str, enum.Enum):
+    FLASH_FLOOD = "FLASH_FLOOD"
+    RIVER_RISE = "RIVER_RISE"
+    SOIL_SATURATION = "SOIL_SATURATION"
+    CLOUDBURST = "CLOUDBURST"
+    EVACUATION_WARNING = "EVACUATION_WARNING"
+
+class AlertSeverity(str, enum.Enum):
+    INFO = "INFO"
+    ADVISORY = "ADVISORY"
+    WATCH = "WATCH"
+    WARNING = "WARNING"
+    DANGER = "DANGER"
+    EMERGENCY = "EMERGENCY"
+
+class AlertStatus(str, enum.Enum):
+    ACTIVE = "ACTIVE"
+    ACKNOWLEDGED = "ACKNOWLEDGED"
+    EXPIRED = "EXPIRED"
+    CANCELLED = "CANCELLED"
+
+class CitizenReportType(str, enum.Enum):
+    RIVER_RISING = "RIVER_RISING"
+    FLASH_FLOOD = "FLASH_FLOOD"
+    ROAD_BLOCKAGE = "ROAD_BLOCKAGE"
+    LANDSLIDE = "LANDSLIDE"
+    BRIDGE_DAMAGE = "BRIDGE_DAMAGE"
+    HEAVY_RAINFALL = "HEAVY_RAINFALL"
+    OTHER_EMERGENCY = "OTHER_EMERGENCY"
+    
+    # Backwards-compatible aliases
+    WATER_OVERFLOW = "WATER_OVERFLOW"
+    RIVER_BANK_EROSION = "RIVER_BANK_EROSION"
+    ROAD_BLOCKED = "ROAD_BLOCKED"
+    STRUCTURAL_DAMAGE = "STRUCTURAL_DAMAGE"
+    OTHER = "OTHER"
+
+class VerificationStatus(str, enum.Enum):
+    PENDING = "PENDING"
+    VERIFIED = "VERIFIED"
+    REJECTED = "REJECTED"
