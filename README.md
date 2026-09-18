@@ -19,10 +19,9 @@ This project provides structured disaster management bulletins, geospatial track
 * **Automated PDF Export:** Compiles incident reports into verified digital formats for field distribution and administrative review[cite: 1].
 
 ## 🛠️ Tech Stack
-
-* **Language/Framework:** [e.g., Python / Node.js / React]
-* **Reporting Engine:** [e.g., PDFKit / ReportLab / Puppeteer]
-* **Data Layer:** [e.g., PostgreSQL / PostGIS / JSON]
+Frontend:React.js
+Language/Framework:** [e.g., Python / FastAPI]
+Data Layer: [e.g., PostgreSQL / PostGIS / JSON]
 
 ## 📄 Sample Report Output
 
