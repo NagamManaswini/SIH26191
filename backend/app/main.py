@@ -1,8 +1,18 @@
+import sys
+import os
+
+# Configure sys.path so imports work regardless of deployment entrypoint (root or backend)
+_current_dir = os.path.dirname(os.path.abspath(__file__))
+_backend_dir = os.path.dirname(_current_dir)
+_root_dir = os.path.dirname(_backend_dir)
+for _p in [_root_dir, _backend_dir, _current_dir]:
+    if _p and os.path.exists(_p) and _p not in sys.path:
+        sys.path.insert(0, _p)
+
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse
-import os
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded

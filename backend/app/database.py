@@ -1,14 +1,50 @@
 """Database Engine Setup with Automatic SQLite Fallback for Local Development & Testing."""
 
 import os
+import sys
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from backend.app.config import settings
 
-db_url = settings.DATABASE_URL
+
+def _get_sqlite_fallback_url() -> str:
+    """Determine safe SQLite URL depending on deployment environment (Vercel/Lambda vs Local)."""
+    if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME") or (os.name != "nt" and os.path.exists("/tmp")):
+        return "sqlite:////tmp/sih_disaster.db"
+    return "sqlite:///./sih_disaster.db"
+
+
+def _sanitize_and_resolve_db_url() -> str:
+    """Resolve and sanitize PostgreSQL/SQLite connection URL from environment variables."""
+    # Check possible env vars in order of priority (including Vercel Postgres env vars)
+    raw_url = (
+        os.environ.get("DATABASE_URL")
+        or os.environ.get("POSTGRES_URL")
+        or os.environ.get("POSTGRES_PRISMA_URL")
+        or os.environ.get("POSTGRES_URL_NON_POOLING")
+        or os.environ.get("DATABASE_PUBLIC_URL")
+        or settings.DATABASE_URL
+        or ""
+    )
+
+    raw_url = raw_url.strip().strip("'\"")
+
+    if not raw_url:
+        return _get_sqlite_fallback_url()
+
+    # Normalize PostgreSQL URL scheme for SQLAlchemy 2.0+
+    if raw_url.startswith("postgres://"):
+        raw_url = "postgresql+psycopg2://" + raw_url[len("postgres://"):]
+    elif raw_url.startswith("postgresql://") and not raw_url.startswith("postgresql+"):
+        raw_url = "postgresql+psycopg2://" + raw_url[len("postgresql://"):]
+
+    return raw_url
+
+
+db_url = _sanitize_and_resolve_db_url()
 connect_args = {}
 
-# Test PostgreSQL availability; fallback to SQLite if PostgreSQL is unreachable or credentials mismatch
+# Test PostgreSQL availability; fallback to SQLite if PostgreSQL is unreachable or invalid URL
 if db_url.startswith("sqlite"):
     connect_args = {"check_same_thread": False}
 else:
@@ -18,15 +54,25 @@ else:
             pass
         temp_engine.dispose()
     except Exception as err:
-        print(f"[WARNING] Could not connect to PostgreSQL at '{db_url}'. Falling back to local SQLite database.")
-        db_url = "sqlite:///./sih_disaster.db"
+        fallback_url = _get_sqlite_fallback_url()
+        print(f"[WARNING] PostgreSQL connection check returned: {err}. Falling back to SQLite database ({fallback_url}).")
+        db_url = fallback_url
         connect_args = {"check_same_thread": False}
 
-engine = create_engine(
-    db_url,
-    connect_args=connect_args,
-    pool_pre_ping=True,
-)
+try:
+    engine = create_engine(
+        db_url,
+        connect_args=connect_args,
+        pool_pre_ping=True,
+    )
+except Exception as engine_err:
+    print(f"[WARNING] Could not initialize engine with {db_url}: {engine_err}. Initializing fallback SQLite engine.")
+    db_url = _get_sqlite_fallback_url()
+    engine = create_engine(
+        db_url,
+        connect_args={"check_same_thread": False},
+        pool_pre_ping=True,
+    )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -55,7 +101,7 @@ def init_db():
             from backend.app.models.entities import Shelter, ShelterResource, HazardZone, Population, Alert
 
             if db.query(Shelter).count() == 0:
-                print("[INIT] Seeding shelters table in PostgreSQL database...")
+                print("[INIT] Seeding shelters table in database...")
                 s1 = Shelter(
                     name="St. Joseph Higher Secondary School Shelter",
                     address="Meppadi Town, Wayanad, Kerala - 673577",
@@ -110,10 +156,10 @@ def init_db():
                 r4 = ShelterResource(shelter_id=s4.id, water_supply_days=10.0, food_supply_days=10.0, medical_kits=80, power_backup=True, sanitation_facilities=40)
                 db.add_all([r1, r2, r3, r4])
                 db.commit()
-                print("[OK] Seeded 4 shelters and resource records into PostgreSQL database.")
+                print("[OK] Seeded 4 shelters and resource records.")
 
             if db.query(HazardZone).count() == 0:
-                print("[INIT] Seeding hazard_zones table in PostgreSQL database...")
+                print("[INIT] Seeding hazard_zones table...")
                 h1 = HazardZone(
                     name="Chooralmala Red Zone",
                     hazard_type="landslide",
@@ -130,10 +176,10 @@ def init_db():
                 )
                 db.add_all([h1, h2])
                 db.commit()
-                print("[OK] Seeded hazard zones into PostgreSQL database.")
+                print("[OK] Seeded hazard zones.")
 
             if db.query(Alert).count() == 0:
-                print("[INIT] Seeding alerts table in PostgreSQL database...")
+                print("[INIT] Seeding alerts table...")
                 a1 = Alert(
                     title="RED LANDSLIDE WARNING — Wayanad (Chooralmala & Mundakkai)",
                     message="Extreme rainfall exceeding 340mm/24h recorded. Unstable soil condition detected on steep slopes.",
@@ -160,7 +206,7 @@ def init_db():
                 )
                 db.add_all([a1, a2, a3])
                 db.commit()
-                print("[OK] Seeded emergency alerts into PostgreSQL database.")
+                print("[OK] Seeded emergency alerts.")
 
             from backend.app.models.entities import AnimalShelter, Animal, CommunicationMessage
             if db.query(AnimalShelter).count() == 0:
@@ -280,7 +326,6 @@ def init_db():
             from backend.app.utils.security import hash_password as _hash_pw
             existing_hospital_user = db.query(User).filter(User.email == "hospital@ggh.example").first()
             if not existing_hospital_user:
-                # Find or use the first hospital in DB
                 first_hospital = db.query(HospitalModel).filter(HospitalModel.is_active == True).first()
                 if first_hospital:
                     hosp_user = User(
@@ -301,12 +346,9 @@ def init_db():
                     db.add(hu)
                     db.commit()
                     print(f"[OK] Seeded demo hospital user: hospital@ggh.example → Hospital '{first_hospital.name}'")
-                else:
-                    print("[NOTE] No hospitals in DB yet — hospital demo user will be seeded after first hospital is created.")
 
         finally:
             db.close()
 
     except Exception as e:
         print(f"[WARNING] Database initialization note: {e}")
-
