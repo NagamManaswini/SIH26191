@@ -3,10 +3,7 @@ import os
 from typing import Dict, Any
 from fastapi import APIRouter, HTTPException
 
-# Add edge-simulator directory to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "edge-simulator")))
-
-from edge_manager import edge_simulation_manager
+from app.services.edge_manager import edge_simulation_manager
 from app.schemas.edge import (
     EdgeNetworkOverviewResponse,
     EdgeSimulationActionResponse,

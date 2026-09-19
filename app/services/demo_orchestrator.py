@@ -4,9 +4,7 @@ from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 from sqlalchemy.orm import Session
 
-# Add edge-simulator path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "edge-simulator")))
-from edge_manager import edge_simulation_manager
+from app.services.edge_manager import edge_simulation_manager
 
 from app.schemas.demo import DemoStageInfo, DemoStatusResponse
 

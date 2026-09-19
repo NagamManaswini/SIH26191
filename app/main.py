@@ -31,26 +31,27 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("flash_flood_api")
 
 # Ensure all database tables are created on startup if using direct SQLite or testing
-Base.metadata.create_all(bind=engine)
-
-# Ensure new columns on existing SQLite tables are present
-with engine.connect() as conn:
-    for tbl, col, col_type, default_val in [
-        ("watersheds", "average_slope_deg", "FLOAT", "24.5"),
-        ("watersheds", "elevation_m", "FLOAT", "1850.0"),
-        ("citizen_reports", "confidence_score", "FLOAT", "50.0"),
-        ("citizen_reports", "verified_by_user_id", "INTEGER", "NULL"),
-        ("citizen_reports", "verified_at", "DATETIME", "NULL"),
-        ("citizen_reports", "verification_notes", "TEXT", "NULL"),
-        ("evacuation_centers", "is_active", "BOOLEAN", "1"),
-        ("evacuation_centers", "district", "VARCHAR(100)", "'Rudraprayag'"),
-        ("evacuation_centers", "elevation_m", "FLOAT", "2100.0"),
-    ]:
-        try:
-            conn.execute(text(f"ALTER TABLE {tbl} ADD COLUMN {col} {col_type} DEFAULT {default_val}"))
-            conn.commit()
-        except Exception:
-            pass
+try:
+    Base.metadata.create_all(bind=engine)
+    with engine.connect() as conn:
+        for tbl, col, col_type, default_val in [
+            ("watersheds", "average_slope_deg", "FLOAT", "24.5"),
+            ("watersheds", "elevation_m", "FLOAT", "1850.0"),
+            ("citizen_reports", "confidence_score", "FLOAT", "50.0"),
+            ("citizen_reports", "verified_by_user_id", "INTEGER", "NULL"),
+            ("citizen_reports", "verified_at", "DATETIME", "NULL"),
+            ("citizen_reports", "verification_notes", "TEXT", "NULL"),
+            ("evacuation_centers", "is_active", "BOOLEAN", "1"),
+            ("evacuation_centers", "district", "VARCHAR(100)", "'Rudraprayag'"),
+            ("evacuation_centers", "elevation_m", "FLOAT", "2100.0"),
+        ]:
+            try:
+                conn.execute(text(f"ALTER TABLE {tbl} ADD COLUMN {col} {col_type} DEFAULT {default_val}"))
+                conn.commit()
+            except Exception:
+                pass
+except Exception as e:
+    logger.warning(f"Database schema initialization notice: {e}")
 
 # Seed default demo users for seamless login
 try:
