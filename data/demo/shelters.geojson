@@ -1,0 +1,39 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.87,
+          19.07
+        ]
+      },
+      "properties": {
+        "name": "Central High School Relief Shelter",
+        "lon": 72.87,
+        "lat": 19.07,
+        "capacity": 500,
+        "status": "active"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.92,
+          19.13
+        ]
+      },
+      "properties": {
+        "name": "North Ridge Community Stadium",
+        "lon": 72.92,
+        "lat": 19.13,
+        "capacity": 1200,
+        "status": "active"
+      }
+    }
+  ]
+}

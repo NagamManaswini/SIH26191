@@ -1,0 +1,73 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.9,
+              19.1
+            ],
+            [
+              72.95,
+              19.1
+            ],
+            [
+              72.95,
+              19.15
+            ],
+            [
+              72.9,
+              19.15
+            ],
+            [
+              72.9,
+              19.1
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_type": "weathered_granite",
+        "erodibility_index": 0.85
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85,
+              19.05
+            ],
+            [
+              72.9,
+              19.05
+            ],
+            [
+              72.9,
+              19.1
+            ],
+            [
+              72.85,
+              19.1
+            ],
+            [
+              72.85,
+              19.05
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "soil_type": "sandy_clay_alluvium",
+        "erodibility_index": 0.45
+      }
+    }
+  ]
+}

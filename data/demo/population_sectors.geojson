@@ -1,0 +1,75 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86,
+              19.06
+            ],
+            [
+              72.89,
+              19.06
+            ],
+            [
+              72.89,
+              19.09
+            ],
+            [
+              72.86,
+              19.09
+            ],
+            [
+              72.86,
+              19.06
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "location_name": "Ward 1 Riverside",
+        "total_population": 14200,
+        "vulnerable_population": 2100
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.9,
+              19.11
+            ],
+            [
+              72.94,
+              19.11
+            ],
+            [
+              72.94,
+              19.14
+            ],
+            [
+              72.9,
+              19.14
+            ],
+            [
+              72.9,
+              19.11
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "location_name": "Ward 2 North Foothills",
+        "total_population": 8500,
+        "vulnerable_population": 1200
+      }
+    }
+  ]
+}

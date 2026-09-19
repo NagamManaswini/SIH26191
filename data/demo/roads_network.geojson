@@ -1,0 +1,59 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.86,
+            19.06
+          ],
+          [
+            72.89,
+            19.09
+          ],
+          [
+            72.92,
+            19.12
+          ],
+          [
+            72.94,
+            19.14
+          ]
+        ]
+      },
+      "properties": {
+        "name": "State Highway 12",
+        "road_type": "highway",
+        "condition": "good"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.9,
+            19.1
+          ],
+          [
+            72.92,
+            19.11
+          ],
+          [
+            72.95,
+            19.13
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Mountain Ridge Road",
+        "road_type": "secondary",
+        "condition": "damaged"
+      }
+    }
+  ]
+}

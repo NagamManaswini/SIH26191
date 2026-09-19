@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # 1. PostgreSQL + PostGIS Database
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: sih_postgis_db
+    restart: always
+    environment:
+      POSTGRES_DB: sih_disaster_db
+      POSTGRES_USER: sih_user
+      POSTGRES_PASSWORD: sih_password_secure_123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sih_user -d sih_disaster_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. Python FastAPI Backend Engine
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: sih_fastapi_backend
+    restart: always
+    environment:
+      APP_NAME: "SIH26191 Intelligent Disaster Management Platform"
+      APP_ENV: "production"
+      DEBUG: "false"
+      SECRET_KEY: "prod_secret_key_change_in_production_env"
+      DATABASE_URL: "postgresql://sih_user:sih_password_secure_123@db:5432/sih_disaster_db"
+      CORS_ORIGINS: '["http://localhost", "http://localhost:80", "http://127.0.0.1"]'
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # 3. React TypeScript PWA Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sih_react_frontend
+    restart: always
+
+  # 4. NGINX Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: sih_nginx_proxy
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  postgres_data:
+    driver: local

@@ -1,0 +1,77 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.92,
+              19.12
+            ],
+            [
+              72.95,
+              19.12
+            ],
+            [
+              72.95,
+              19.15
+            ],
+            [
+              72.92,
+              19.15
+            ],
+            [
+              72.92,
+              19.12
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "title": "2023 Monsoon Landslide Alpha",
+        "event_type": "landslide",
+        "severity": "CRITICAL",
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86,
+              19.06
+            ],
+            [
+              72.89,
+              19.06
+            ],
+            [
+              72.89,
+              19.08
+            ],
+            [
+              72.86,
+              19.08
+            ],
+            [
+              72.86,
+              19.06
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "title": "2024 Flash Flood Catchment",
+        "event_type": "flood",
+        "severity": "HIGH",
+        "year": 2024
+      }
+    }
+  ]
+}

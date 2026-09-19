@@ -1,0 +1,73 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.93,
+          19.14
+        ]
+      },
+      "properties": {
+        "name": "Station North Hill",
+        "lon": 72.93,
+        "lat": 19.14,
+        "rainfall_mm": 240.0,
+        "intensity": "extreme"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.89,
+          19.1
+        ]
+      },
+      "properties": {
+        "name": "Station Central Valley",
+        "lon": 72.89,
+        "lat": 19.1,
+        "rainfall_mm": 115.0,
+        "intensity": "heavy"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.86,
+          19.06
+        ]
+      },
+      "properties": {
+        "name": "Station South Coast",
+        "lon": 72.86,
+        "lat": 19.06,
+        "rainfall_mm": 60.0,
+        "intensity": "moderate"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.94,
+          19.08
+        ]
+      },
+      "properties": {
+        "name": "Station East Ridge",
+        "lon": 72.94,
+        "lat": 19.08,
+        "rainfall_mm": 190.0,
+        "intensity": "heavy"
+      }
+    }
+  ]
+}

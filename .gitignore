@@ -1,0 +1,24 @@
+# Environment Variables (Contains sensitive credentials)
+.env
+
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+
+# Database files
+*.db
+*.sqlite3
+
+# IDE & Editor files
+.vscode/
+.idea/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/

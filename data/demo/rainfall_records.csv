@@ -1,0 +1,5 @@
+name,lon,lat,rainfall_mm,intensity
+Station North Hill,72.93,19.14,240.0,extreme
+Station Central Valley,72.89,19.1,115.0,heavy
+Station South Coast,72.86,19.06,60.0,moderate
+Station East Ridge,72.94,19.08,190.0,heavy
