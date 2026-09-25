@@ -17,10 +17,12 @@ venv_python = os.path.join(base_dir, ".venv", "Scripts", "python.exe")
 if not os.path.exists(venv_python):
     venv_python = sys.executable
 
+PORT = int(os.environ.get("PORT", 8000))
+
 # 1. Start FastAPI Backend Server
-print("\n[1/2] Launching FastAPI Backend Server on http://127.0.0.1:8001 ...")
+print(f"\n[1/2] Launching FastAPI Backend Server on http://127.0.0.1:{PORT} ...")
 backend_proc = subprocess.Popen(
-    [venv_python, "-m", "uvicorn", "backend.app.main:app", "--host", "127.0.0.1", "--port", "8001", "--reload"],
+    [venv_python, "-m", "uvicorn", "backend.app.main:app", "--host", "127.0.0.1", "--port", str(PORT), "--reload"],
     cwd=base_dir
 )
 
@@ -37,7 +39,7 @@ frontend_proc = subprocess.Popen(
 print("\n==========================================================")
 print("[OK] BOTH SERVICES ARE RUNNING!")
 print("   - Frontend UI: http://localhost:5173/")
-print("   - Backend API: http://127.0.0.1:8001/docs")
+print(f"   - Backend API: http://127.0.0.1:{PORT}/docs")
 print("Press CTRL+C in this terminal to stop both servers.")
 print("==========================================================\n")
 

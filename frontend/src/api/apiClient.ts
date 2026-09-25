@@ -5,13 +5,14 @@
 
 import { offlineStorage } from "../utils/offlineStorage";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8001/api/v1";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1";
+const SERVER_BASE_URL = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
 
 export async function fetchJson<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = endpoint.startsWith("http")
     ? endpoint
-    : endpoint.startsWith("/health") || endpoint === "/"
-    ? `http://localhost:8001${endpoint}`
+    : endpoint.startsWith("/health") || endpoint === "/" || endpoint.startsWith("/docs")
+    ? `${SERVER_BASE_URL}${endpoint}`
     : `${API_BASE_URL}${endpoint}`;
 
   try {

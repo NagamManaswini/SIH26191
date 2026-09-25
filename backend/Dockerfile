@@ -28,6 +28,7 @@ COPY gis ./gis
 COPY ml ./ml
 COPY relocation ./relocation
 COPY data ./data
+COPY src ./src
 
 # Expose FastAPI port
 EXPOSE 8000
