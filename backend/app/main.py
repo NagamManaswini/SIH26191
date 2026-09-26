@@ -93,7 +93,7 @@ app.include_router(health_router)
 app.include_router(auth_router, prefix=settings.API_V1_STR)
 app.include_router(shelters_router, prefix=settings.API_V1_STR)
 app.include_router(hazard_zones_router, prefix=settings.API_V1_STR)
-app.include_router(hazard_zones_router, prefix="/api/v1/hazard-zones", tags=["Hazard Zones"], include_in_schema=False)
+
 app.include_router(population_router, prefix=settings.API_V1_STR)
 app.include_router(rainfall_router, prefix=settings.API_V1_STR)
 app.include_router(risk_router, prefix=settings.API_V1_STR)
