@@ -1,7 +1,6 @@
-"""Database Engine Setup with Automatic SQLite Fallback for Local Development & Testing."""
-
 import os
 import sys
+import shutil
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from backend.app.config import settings
@@ -10,27 +9,43 @@ from backend.app.config import settings
 def _get_sqlite_fallback_url() -> str:
     """Determine safe SQLite URL depending on deployment environment (Vercel/Lambda vs Local)."""
     if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME") or (os.name != "nt" and os.path.exists("/tmp")):
-        return "sqlite:////tmp/sih_disaster.db"
+        tmp_db = "/tmp/sih_disaster.db"
+        if not os.path.exists(tmp_db):
+            # Copy existing pre-seeded database if present
+            root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            seed_db = os.path.join(root_dir, "sih_disaster.db")
+            if os.path.exists(seed_db):
+                try:
+                    shutil.copy2(seed_db, tmp_db)
+                except Exception as e:
+                    print(f"[WARNING] Could not copy seed db: {e}")
+        return f"sqlite:///{tmp_db}"
     return "sqlite:///./sih_disaster.db"
 
 
 def _sanitize_and_resolve_db_url() -> str:
     """Resolve and sanitize PostgreSQL/SQLite connection URL from environment variables."""
-    # Check possible env vars in order of priority (including Vercel Postgres env vars)
+    # Check explicit env vars in order of priority (including Vercel Postgres env vars)
     raw_url = (
         os.environ.get("DATABASE_URL")
         or os.environ.get("POSTGRES_URL")
         or os.environ.get("POSTGRES_PRISMA_URL")
         or os.environ.get("POSTGRES_URL_NON_POOLING")
         or os.environ.get("DATABASE_PUBLIC_URL")
-        or settings.DATABASE_URL
         or ""
     )
 
+    # In Vercel serverless functions, avoid attempting localhost PostgreSQL connection
+    if not raw_url:
+        if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+            return _get_sqlite_fallback_url()
+        raw_url = settings.DATABASE_URL or ""
+
     raw_url = raw_url.strip().strip("'\"")
 
-    if not raw_url:
-        return _get_sqlite_fallback_url()
+    if not raw_url or "localhost" in raw_url or "127.0.0.1" in raw_url:
+        if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+            return _get_sqlite_fallback_url()
 
     # Normalize PostgreSQL URL scheme for SQLAlchemy 2.0+
     if raw_url.startswith("postgres://"):
@@ -73,6 +88,7 @@ except Exception as engine_err:
         connect_args={"check_same_thread": False},
         pool_pre_ping=True,
     )
+
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

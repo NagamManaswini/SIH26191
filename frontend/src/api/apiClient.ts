@@ -5,8 +5,9 @@
 
 import { offlineStorage } from "../utils/offlineStorage";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/v1";
 const SERVER_BASE_URL = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
+
 
 export async function fetchJson<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = endpoint.startsWith("http")
