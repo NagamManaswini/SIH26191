@@ -1,0 +1,17 @@
+[project]
+name = "sih-disaster-management"
+version = "1.0.0"
+description = "Intelligent Hazard Red Zone Mapping, Carrying Capacity Assessment & Relocation System"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.vercel]
+entrypoint = "backend.app.main:app"
+
+[tool.pyright]
+include = [".", "backend", "api"]
+extraPaths = [".", "backend"]
+executionEnvironments = [
+  { root = "." }
+]
+
