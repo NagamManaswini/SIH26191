@@ -15,5 +15,3 @@ gis/
 data/
 cache/
 frontend/node_modules/
-frontend/src/
-frontend/public/
