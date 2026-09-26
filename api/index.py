@@ -9,7 +9,11 @@ for _p in [_root_dir, _backend_dir]:
     if _p and os.path.exists(_p) and _p not in sys.path:
         sys.path.insert(0, _p)
 
-from backend.app.main import app  # noqa: F401
+from backend.app.main import app
+
+# Top-level ASGI FastAPI instance for Vercel
+app = app
 
 __all__ = ["app"]
+
 
