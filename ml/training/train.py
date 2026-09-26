@@ -18,7 +18,17 @@ MODEL_PATH = os.path.join(MODEL_DIR, "xgboost_hazard_model.joblib")
 
 def train_and_save_model(save_path: str = MODEL_PATH) -> Dict[str, Any]:
     """Train XGBoost model on synthetic dataset, evaluate metrics, and save serialized joblib artifact."""
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+        save_path = "/tmp/xgboost_hazard_model.joblib"
+
+    try:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    except Exception:
+        save_path = "/tmp/xgboost_hazard_model.joblib"
+        try:
+            os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        except Exception:
+            pass
 
     # 1. Load training dataset
     df = generate_synthetic_training_dataframe(num_samples=1500, seed=42)
@@ -62,10 +72,14 @@ def train_and_save_model(save_path: str = MODEL_PATH) -> Dict[str, Any]:
         "feature_importances": importances,
         "disclaimer": "PROTOTYPE DEMO MODEL: Trained on synthetic data. Not scientifically validated for operational disaster management.",
     }
-    joblib.dump(artifact_payload, save_path)
-    print(f"Successfully trained and saved model artifact to: {save_path}")
+    try:
+        joblib.dump(artifact_payload, save_path)
+        print(f"Successfully trained and saved model artifact to: {save_path}")
+    except Exception as dump_err:
+        print(f"[WARNING] Could not persist model to {save_path}: {dump_err}. Retaining model in memory.")
 
     return artifact_payload
+
 
 
 if __name__ == "__main__":
