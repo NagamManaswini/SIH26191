@@ -1,12 +1,7 @@
-"""XGBoost model training, preprocessing pipeline, and model serialization."""
-
 import os
 from typing import Dict, Any, Tuple
 import joblib
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from xgboost import XGBClassifier
 
 from ml.data.dataset_loader import generate_synthetic_training_dataframe
 from ml.features.feature_extractor import FEATURE_NAMES
@@ -18,6 +13,14 @@ MODEL_PATH = os.path.join(MODEL_DIR, "xgboost_hazard_model.joblib")
 
 def train_and_save_model(save_path: str = MODEL_PATH) -> Dict[str, Any]:
     """Train XGBoost model on synthetic dataset, evaluate metrics, and save serialized joblib artifact."""
+    try:
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import StandardScaler
+        from xgboost import XGBClassifier
+    except ImportError as ie:
+        print(f"[INFO] Heavy ML dependencies not installed for training: {ie}. Using fallback prediction.")
+        return {}
+
     if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
         save_path = "/tmp/xgboost_hazard_model.joblib"
 

@@ -1,0 +1,19 @@
+# Files and directories to exclude from Vercel Serverless Function bundle
+.git
+.github
+.vscode
+.venv
+.pytest_cache
+*.pdf
+*.bat
+*.sh
+tests/
+scripts/
+docs/
+docker/
+gis/
+data/
+cache/
+frontend/node_modules/
+frontend/src/
+frontend/public/
