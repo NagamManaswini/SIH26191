@@ -84,8 +84,11 @@ class HazardPredictor:
                     "model_version": self.artifact.get("version", "v1.0.0-prototype-demo") if self.artifact else "v1.0.0-fallback",
                     "disclaimer": "PROTOTYPE DEMO MODEL: Not scientifically validated for operational disaster prediction.",
                 }
+        except ValueError:
+            raise
         except Exception as pred_err:
             print(f"[WARNING] Model inference encountered error: {pred_err}. Using analytical fallback.")
+
 
         # Analytical rule-based fallback calculation (guarantees 100% uptime)
         rainfall = float(feature_input.get("rainfall_mm", 0.0) or 0.0)
