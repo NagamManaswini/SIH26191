@@ -42,8 +42,25 @@ from backend.app.routers import (
 )
 
 
+def _get_safe_client_ip(request: Request) -> str:
+    try:
+        forwarded = request.headers.get("x-forwarded-for")
+        if forwarded:
+            return forwarded.split(",")[0].strip()
+        if request.client and getattr(request.client, "host", None):
+            return request.client.host
+    except Exception:
+        pass
+    return "127.0.0.1"
+
+
 # API Rate Limiter
-limiter = Limiter(key_func=get_remote_address, default_limits=[settings.RATE_LIMIT_DEFAULT])
+limiter = Limiter(
+    key_func=_get_safe_client_ip,
+    default_limits=[settings.RATE_LIMIT_DEFAULT],
+    enabled=not bool(os.environ.get("VERCEL")),
+)
+
 
 
 @asynccontextmanager
