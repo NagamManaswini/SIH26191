@@ -99,11 +99,12 @@ async def rate_limit_handler(request: Request, exc: Exception) -> JSONResponse:
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 # Global Exception Handler
